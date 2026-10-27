@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Admin{% endblock %} — Hurtl355</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}"/>
+  <script>
+    (function(){
+      var saved = localStorage.getItem('adminTheme') || 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
+</head>
+<body>
+
+{% if current_user.is_authenticated %}
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar__header">
+    <a href="{{ url_for('admin.dashboard') }}" class="sidebar__brand">H<span class="red">355</span></a>
+    <button class="sidebar__close" id="sidebarClose" aria-label="Close sidebar">✕</button>
+  </div>
+  <nav class="sidebar__nav">
+    <a href="{{ url_for('admin.dashboard') }}" class="sidebar__link {% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
+      <span class="sidebar__icon">⊞</span> Dashboard
+    </a>
+    <a href="{{ url_for('admin.works_list') }}" class="sidebar__link {% if 'work' in request.endpoint %}active{% endif %}">
+      <span class="sidebar__icon">◈</span> Portfolio
+    </a>
+    <a href="{{ url_for('admin.pricing_list') }}" class="sidebar__link {% if 'pricing' in request.endpoint %}active{% endif %}">
+      <span class="sidebar__icon">◉</span> Pricing
+    </a>
+    <a href="{{ url_for('admin.testimonials_list') }}" class="sidebar__link {% if 'testimonial' in request.endpoint %}active{% endif %}">
+      <span class="sidebar__icon">◎</span> Testimonials
+      {% set pending = namespace(count=0) %}
+      {# We don't query here — badge shown on dashboard only #}
+    </a>
+    <a href="{{ url_for('admin.messages_list') }}" class="sidebar__link {% if 'message' in request.endpoint %}active{% endif %}">
+      <span class="sidebar__icon">◻</span> Messages
+    </a>
+    <a href="{{ url_for('admin.settings') }}" class="sidebar__link {% if request.endpoint == 'admin.settings' %}active{% endif %}">
+      <span class="sidebar__icon">⚙</span> Settings
+    </a>
+    <hr class="sidebar__divider"/>
+    <a href="{{ url_for('public.index') }}" target="_blank" class="sidebar__link">
+      <span class="sidebar__icon">↗</span> View Site
+    </a>
+    <a href="{{ url_for('admin.logout') }}" class="sidebar__link sidebar__link--danger">
+      <span class="sidebar__icon">⏻</span> Logout
+    </a>
+  </nav>
+  <div class="sidebar__footer">
+    <button class="theme-toggle" id="adminThemeToggle" aria-label="Toggle theme">
+      <span id="adminThemeIcon">☀️</span>
+    </button>
+  </div>
+</aside>
+
+<!-- Mobile topbar -->
+<div class="admin-topbar">
+  <button class="hamburger hamburger--admin" id="adminHamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+  <span class="mono" style="font-size:.8rem;">{% block topbar_title %}Admin{% endblock %}</span>
+  <a href="{{ url_for('public.index') }}" target="_blank" class="mono" style="font-size:.8rem;">↗ Site</a>
+</div>
+
+<!-- Main content wrapper -->
+<main class="admin-main" id="adminMain">
+
+{% endif %}
+
+<!-- Flash messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash flash--{{ category }}" role="alert">
+          {{ message }}
+          <button class="flash__close" onclick="this.parentElement.remove()">✕</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+{% block content %}{% endblock %}
+
+{% if current_user.is_authenticated %}
+</main>
+{% endif %}
+
+<script src="{{ url_for('static', filename='js/admin.js') }}" defer></script>
+</body>
+</html>

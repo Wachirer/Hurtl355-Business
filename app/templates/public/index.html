@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="{{ settings.hero_subtext }} — Nairobi-based software engineer and creative."/>
+  <title>{{ settings.brand_name }} — Portfolio</title>
+
+  <!-- Google Fonts: Unbounded (display) + DM Sans (body) + Space Mono (labels) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"/>
+
+  <!-- Theme flash prevention — runs before render -->
+  <script>
+    (function(){
+      var saved = localStorage.getItem('theme');
+      var prefer = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', saved || prefer);
+    })();
+  </script>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════ CUSTOM CURSOR -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ NAV -->
+<nav class="nav" id="mainNav">
+  <div class="nav__inner container">
+
+    <!-- Logo + Brand -->
+    <a href="#hero" class="nav__brand smooth-scroll">
+      {% if settings.logo_path %}
+        <img src="{{ media_url(settings.logo_path) }}" alt="{{ settings.brand_name }} logo" class="nav__logo-img" loading="lazy"/>
+      {% else %}
+        <span class="nav__logo-placeholder">H<span class="red">355</span></span>
+      {% endif %}
+      <span class="nav__brand-name">{{ settings.brand_name }}</span>
+    </a>
+
+    <!-- Desktop nav links -->
+    <ul class="nav__links" id="navLinks">
+      <li><a href="#services" class="smooth-scroll">Services</a></li>
+      <li><a href="#portfolio" class="smooth-scroll">Work</a></li>
+      <li><a href="#pricing" class="smooth-scroll">Pricing</a></li>
+      <li><a href="#about" class="smooth-scroll">About</a></li>
+      <li><a href="#testimonials" class="smooth-scroll">Reviews</a></li>
+      <li><a href="#contact" class="smooth-scroll">Contact</a></li>
+    </ul>
+
+    <!-- Right controls -->
+    <div class="nav__controls">
+      <!-- Dark mode toggle -->
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
+        <span class="theme-toggle__icon" id="themeIcon">☀️</span>
+      </button>
+      <!-- Hamburger (mobile) -->
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+  </div>
+</nav>
+
+<!-- Mobile menu overlay -->
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  <ul>
+    <li><a href="#services" class="smooth-scroll mobile-link">Services</a></li>
+    <li><a href="#portfolio" class="smooth-scroll mobile-link">Work</a></li>
+    <li><a href="#pricing" class="smooth-scroll mobile-link">Pricing</a></li>
+    <li><a href="#about" class="smooth-scroll mobile-link">About</a></li>
+    <li><a href="#testimonials" class="smooth-scroll mobile-link">Reviews</a></li>
+    <li><a href="#contact" class="smooth-scroll mobile-link">Contact</a></li>
+  </ul>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════ HERO -->
+<section class="hero" id="hero">
+  <div class="hero__grid-bg" aria-hidden="true"></div>
+  <div class="hero__scanlines" aria-hidden="true"></div>
+
+  <div class="container hero__content">
+    <p class="hero__eyebrow mono">// Nairobi, Kenya</p>
+
+    <h1 class="hero__title glitch" data-text="{{ settings.brand_name }}">
+      {{ settings.brand_name }}
+    </h1>
+
+    <p class="hero__tagline">{{ settings.hero_tagline }}</p>
+
+    <div class="hero__services-marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>IT &amp; Web Dev</span>
+        <span class="red">✦</span>
+        <span>Graphic Design</span>
+        <span class="red">✦</span>
+        <span>Video Editing</span>
+        <span class="red">✦</span>
+        <span>Music Production</span>
+        <span class="red">✦</span>
+        <span>IT &amp; Web Dev</span>
+        <span class="red">✦</span>
+        <span>Graphic Design</span>
+        <span class="red">✦</span>
+        <span>Video Editing</span>
+        <span class="red">✦</span>
+        <span>Music Production</span>
+        <span class="red">✦</span>
+      </div>
+    </div>
+
+    <div class="hero__cta">
+      <a href="#portfolio" class="btn btn--primary smooth-scroll wiggle-btn">
+        {{ settings.hero_cta_primary }}
+      </a>
+      <a href="#contact" class="btn btn--outline smooth-scroll wiggle-btn">
+        {{ settings.hero_cta_secondary }}
+      </a>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="hero__scroll-hint" aria-hidden="true">
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ SERVICES -->
+<section class="section services" id="services">
+  <div class="container">
+    <div class="section__header reveal">
+      <p class="section__label mono">// What I do</p>
+      <h2 class="section__title">Services</h2>
+    </div>
+
+    <div class="services__grid">
+
+      <div class="service-card reveal" data-delay="0">
+        <div class="service-card__icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="4" y="8" width="40" height="28" rx="3" stroke="currentColor" stroke-width="2.5"/>
+            <path d="M16 36l-2 4h20l-2-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M12 22l5 5 9-10" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M30 20h6M30 24h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>IT &amp; Web Development</h3>
+        <p>Full-stack web apps, APIs, e-commerce solutions, IT support and infrastructure setup. Reliable, fast, and scalable.</p>
+        <a href="#portfolio" data-filter="web" class="service-card__link smooth-scroll">See projects →</a>
+      </div>
+
+      <div class="service-card reveal" data-delay="100">
+        <div class="service-card__icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="24" cy="24" r="18" stroke="currentColor" stroke-width="2.5"/>
+            <path d="M24 14v20M14 24h20" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round"/>
+            <rect x="18" y="18" width="12" height="12" rx="2" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </div>
+        <h3>Graphic Design</h3>
+        <p>Brand identities, logos, social media graphics, print collateral, and UI mockups. Pixel-perfect and purposeful.</p>
+        <a href="#portfolio" data-filter="graphic" class="service-card__link smooth-scroll">See designs →</a>
+      </div>
+
+      <div class="service-card reveal" data-delay="200">
+        <div class="service-card__icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="4" y="10" width="32" height="22" rx="3" stroke="currentColor" stroke-width="2.5"/>
+            <path d="M36 17l8-4v18l-8-4V17z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+            <circle cx="16" cy="21" r="4" fill="var(--red)" opacity="0.8"/>
+          </svg>
+        </div>
+        <h3>Video Editing</h3>
+        <p>Music videos, short films, corporate content, YouTube videos, reels and motion graphics. Cinematic quality, delivered fast.</p>
+        <a href="#portfolio" data-filter="video" class="service-card__link smooth-scroll">See reels →</a>
+      </div>
+
+      <div class="service-card reveal" data-delay="300">
+        <div class="service-card__icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M20 38V10l24 7v21" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+            <circle cx="14" cy="38" r="6" stroke="currentColor" stroke-width="2.5"/>
+            <circle cx="38" cy="38" r="6" stroke="currentColor" stroke-width="2.5"/>
+            <circle cx="14" cy="38" r="2" fill="var(--red)"/>
+            <circle cx="38" cy="38" r="2" fill="var(--red)"/>
+            <path d="M20 18l24 7" stroke="var(--red)" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Music Production &amp; Mixing</h3>
+        <p>Original beats, full production, professional mixing and mastering. Afropop to hip-hop, trap to EDM — genre-fluid.</p>
+        <a href="#portfolio" data-filter="music" class="service-card__link smooth-scroll">Hear tracks →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ PORTFOLIO -->
+<section class="section portfolio" id="portfolio">
+  <div class="container">
+    <div class="section__header reveal">
+      <p class="section__label mono">// Selected work</p>
+      <h2 class="section__title">Portfolio</h2>
+    </div>
+
+    <!-- Filter tabs -->
+    <div class="portfolio__tabs" role="tablist">
+      <button class="tab-btn active" role="tab" data-tab="all" aria-selected="true">All</button>
+      <button class="tab-btn" role="tab" data-tab="graphic" aria-selected="false">Graphic Design</button>
+      <button class="tab-btn" role="tab" data-tab="video" aria-selected="false">Video</button>
+      <button class="tab-btn" role="tab" data-tab="music" aria-selected="false">Music</button>
+      <button class="tab-btn" role="tab" data-tab="web" aria-selected="false">Web / IT</button>
+    </div>
+
+    <!-- Works grid (populated by JS) -->
+    <div class="portfolio__grid" id="worksGrid">
+      {% for work in all_works %}
+      <div class="work-card reveal" data-category="{{ work.category }}" data-id="{{ work.id }}">
+        <!-- Graphic card -->
+        {% if work.category == 'graphic' %}
+          <div class="work-card__media work-card__media--image" data-lightbox="{{ media_url(work.file_path or work.thumbnail_path) }}">
+            {% if work.thumbnail_path %}
+              <img src="{{ media_url(work.thumbnail_path) }}" alt="{{ work.title }}" loading="lazy"/>
+            {% else %}
+              <div class="work-card__placeholder graphic-placeholder">
+                <span>🎨</span>
+              </div>
+            {% endif %}
+            <div class="work-card__overlay">
+              <span class="work-card__zoom">🔍 View</span>
+            </div>
+          </div>
+
+        <!-- Video card -->
+        {% elif work.category == 'video' %}
+          <div class="work-card__media work-card__media--video"
+               data-video-src="{{ media_url(work.file_path) }}"
+               data-video-ext="{{ work.external_url|safe_url }}">
+            {% if work.thumbnail_path %}
+              <img src="{{ media_url(work.thumbnail_path) }}" alt="{{ work.title }}" loading="lazy"/>
+            {% else %}
+              <div class="work-card__placeholder video-placeholder"><span>🎬</span></div>
+            {% endif %}
+            <div class="work-card__overlay">
+              <span class="work-card__play">▶ Play</span>
+            </div>
+          </div>
+
+        <!-- Music card -->
+        {% elif work.category == 'music' %}
+          <div class="work-card__music">
+            <div class="music-cover">
+              {% if work.thumbnail_path %}
+                <img src="{{ media_url(work.thumbnail_path) }}" alt="{{ work.title }}" loading="lazy"/>
+              {% else %}
+                <div class="work-card__placeholder music-placeholder"><span>🎵</span></div>
+              {% endif %}
+              <div class="music-cover__overlay">
+                <button class="music-play-btn"
+                        data-audio="{{ media_url(work.file_path) }}"
+                        data-ext="{{ work.external_url|safe_url }}"
+                        aria-label="Play {{ work.title }}">
+                  <span class="play-icon">▶</span>
+                </button>
+              </div>
+            </div>
+            <div class="music-info">
+              <div class="music-info__top">
+                <h4>{{ work.title }}</h4>
+                <p class="mono music-genre">{{ work.description[:40] if work.description else 'Untitled' }}</p>
+              </div>
+              <div class="music-progress" aria-hidden="true">
+                <div class="music-progress__bar">
+                  <div class="music-progress__fill"></div>
+                </div>
+                <div class="music-time">
+                  <span class="time-current mono">0:00</span>
+                  <span class="time-total mono">—</span>
+                </div>
+              </div>
+              {% if work.external_url %}
+                <a href="{{ work.external_url|safe_url }}" target="_blank" rel="noopener" class="music-ext-link">
+                  Listen on Spotify / SoundCloud ↗
+                </a>
+              {% endif %}
+            </div>
+          </div>
+
+        <!-- Web / IT card -->
+        {% elif work.category == 'web' %}
+          <div class="work-card__web">
+            {% if work.thumbnail_path %}
+              <img src="{{ media_url(work.thumbnail_path) }}" alt="{{ work.title }}" loading="lazy" class="web-thumb"/>
+            {% else %}
+              <div class="work-card__placeholder web-placeholder"><span>💻</span></div>
+            {% endif %}
+            <div class="web-info">
+              <h4>{{ work.title }}</h4>
+              <p>{{ work.description[:120] }}{% if work.description|length > 120 %}…{% endif %}</p>
+              {% if work.tags_list %}
+              <div class="tag-list">
+                {% for tag in work.tags_list[:5] %}
+                  <span class="tag mono">{{ tag }}</span>
+                {% endfor %}
+              </div>
+              {% endif %}
+              {% if work.project_url %}
+                <a href="{{ work.project_url|safe_url }}" target="_blank" rel="noopener" class="btn btn--sm btn--outline">
+                  View Project ↗
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- Card footer (all categories) -->
+        {% if work.category != 'music' %}
+        <div class="work-card__footer">
+          <div>
+            <h4 class="work-card__title">{{ work.title }}</h4>
+            {% if work.description and work.category != 'web' %}
+              <p class="work-card__desc">{{ work.description[:80] }}{% if work.description|length > 80 %}…{% endif %}</p>
+            {% endif %}
+          </div>
+          {% if work.featured %}
+            <span class="badge badge--red mono">Featured</span>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+
+      {% if not all_works %}
+      <div class="portfolio__empty" id="portfolioEmpty">
+        <p>Portfolio coming soon. <a href="#contact" class="smooth-scroll">Reach out</a> to see samples.</p>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Empty state for filtered view -->
+    <p class="portfolio__no-results" id="noResults" style="display:none;">No works in this category yet.</p>
+  </div>
+</section>
+
+<!-- Lightbox (graphic images) -->
+<div class="lightbox" id="lightbox" aria-modal="true" role="dialog" aria-label="Image viewer" hidden>
+  <button class="lightbox__close" id="lightboxClose" aria-label="Close">✕</button>
+  <div class="lightbox__img-wrap">
+    <img src="" alt="" id="lightboxImg" loading="lazy"/>
+  </div>
+</div>
+
+<!-- Video modal -->
+<div class="modal" id="videoModal" aria-modal="true" role="dialog" aria-label="Video player" hidden>
+  <div class="modal__box">
+    <button class="modal__close" id="videoClose" aria-label="Close">✕</button>
+    <div class="modal__video-wrap">
+      <!-- MP4 player -->
+      <video id="modalVideo" controls style="display:none;width:100%">
+        <source src="" type="video/mp4"/>
+      </video>
+      <!-- Iframe for YouTube/Vimeo -->
+      <iframe id="modalIframe" src="" allow="autoplay; fullscreen" allowfullscreen
+              style="display:none;width:100%;aspect-ratio:16/9;border:none;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ PRICING -->
+<section class="section pricing" id="pricing">
+  <div class="container">
+    <div class="section__header reveal">
+      <p class="section__label mono">// Transparent rates</p>
+      <h2 class="section__title">Pricing</h2>
+    </div>
+
+    <!-- Category tabs -->
+    <div class="pricing__tabs">
+      {% for cat_key in pricing_category_order %}
+      <button class="tab-btn {% if loop.first %}active{% endif %}"
+              data-pricing-tab="{{ cat_key }}">
+        {{ pricing_category_labels[cat_key] }}
+      </button>
+      {% endfor %}
+    </div>
+
+    <!-- Pricing panels -->
+    {% for cat_key in pricing_category_order %}
+    <div class="pricing__panel {% if loop.first %}active{% endif %}"
+         id="pricing-{{ cat_key }}" data-panel="{{ cat_key }}">
+
+      <div class="pricing__grid">
+        {% if cat_key in pricing_categories %}
+          {% for pkg in pricing_categories[cat_key] %}
+          <div class="pricing-card reveal {% if pkg.is_popular %}pricing-card--popular{% endif %}"
+               data-delay="{{ loop.index0 * 100 }}">
+            {% if pkg.is_popular %}
+              <div class="pricing-card__badge mono">Most Popular</div>
+            {% endif %}
+            <div class="pricing-card__top">
+              <h3 class="pricing-card__tier">{{ pkg.tier_name }}</h3>
+              <div class="pricing-card__price">
+                <span class="mono price-amount">KES {{ "{:,}".format(pkg.price_kes) }}</span>
+                {% if pkg.price_label %}
+                  <span class="price-label">{{ pkg.price_label }}</span>
+                {% endif %}
+              </div>
+            </div>
+            <ul class="pricing-card__features">
+              {% for feat in pkg.features %}
+              <li class="{% if not feat.included %}feature--excluded{% endif %}">
+                <span class="feature-icon">{% if feat.included %}✓{% else %}✗{% endif %}</span>
+                {{ feat.text }}
+              </li>
+              {% endfor %}
+            </ul>
+            <a href="#contact"
+               class="btn btn--primary btn--block smooth-scroll wiggle-btn"
+               data-service="{{ pricing_category_labels[cat_key] }} — {{ pkg.tier_name }}">
+              Get this package
+            </a>
+          </div>
+          {% endfor %}
+        {% endif %}
+
+        <!-- Custom quote card (always shown) -->
+        <div class="pricing-card pricing-card--custom reveal" data-delay="300">
+          <div class="pricing-card__top">
+            <h3 class="pricing-card__tier">Custom</h3>
+            <div class="pricing-card__price">
+              <span class="mono price-amount">Let's Talk</span>
+            </div>
+          </div>
+          <ul class="pricing-card__features">
+            <li><span class="feature-icon">✓</span> Tailored scope</li>
+            <li><span class="feature-icon">✓</span> Flexible timeline</li>
+            <li><span class="feature-icon">✓</span> Priority support</li>
+            <li><span class="feature-icon">✓</span> Dedicated revisions</li>
+            <li><span class="feature-icon">✓</span> Whatever you need</li>
+          </ul>
+          <a href="#contact" class="btn btn--outline btn--block smooth-scroll wiggle-btn">
+            Request a Quote
+          </a>
+        </div>
+
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ ABOUT -->
+<section class="section about" id="about">
+  <div class="container about__inner">
+
+    <div class="about__photo-col reveal">
+      <div class="about__photo-frame">
+        <div class="about__photo-placeholder">
+          <span class="about__initials">H355</span>
+        </div>
+        <div class="about__photo-deco" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <div class="about__text-col reveal" data-delay="150">
+      <p class="section__label mono">// Who I am</p>
+      <h2 class="section__title">About</h2>
+      <div class="about__bio">
+        {{ settings.about_bio }}
+      </div>
+
+      <div class="about__skills">
+        <p class="mono skills-label">// Skills &amp; tools</p>
+        <div class="skills-wrap">
+          {% for skill in skills %}
+            <span class="skill-tag">{{ skill }}</span>
+          {% endfor %}
+        </div>
+      </div>
+
+      <a href="#contact" class="btn btn--primary smooth-scroll wiggle-btn" style="margin-top:2rem;">
+        Work with me →
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ TESTIMONIALS -->
+<section class="section testimonials" id="testimonials">
+  <div class="container">
+    <div class="section__header reveal">
+      <p class="section__label mono">// Client love</p>
+      <h2 class="section__title">Testimonials</h2>
+    </div>
+
+    <!-- Testimonials grid -->
+    {% if testimonials %}
+    <div class="testimonials__grid">
+      {% for t in testimonials %}
+      <article class="testimonial-card reveal" data-delay="{{ loop.index0 * 80 }}">
+        <div class="testimonial-card__stars">
+          {% for i in range(1, 6) %}
+            <span class="star {% if i <= t.rating %}star--on{% endif %}">★</span>
+          {% endfor %}
+        </div>
+        <blockquote class="testimonial-card__msg">"{{ t.message }}"</blockquote>
+        <footer class="testimonial-card__footer">
+          <strong>{{ t.name }}</strong>
+          {% if t.role %}<span class="mono">{{ t.role }}</span>{% endif %}
+          <time class="mono">{{ t.created_at.strftime('%b %Y') }}</time>
+        </footer>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center" style="opacity:.6;">No reviews yet — be the first!</p>
+    {% endif %}
+
+    <!-- Leave a review form -->
+    <div class="review-form-wrap reveal" id="leaveReview">
+      <h3>Leave a Review</h3>
+      <form class="review-form" id="reviewForm" novalidate>
+        <!-- CSRF via meta tag / API handles via JSON -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="revName">Your Name *</label>
+            <input type="text" id="revName" name="name" required placeholder="Jane Doe" autocomplete="name"/>
+          </div>
+          <div class="form-group">
+            <label for="revRole">Role / Company <span class="mono">(optional)</span></label>
+            <input type="text" id="revRole" name="role" placeholder="CEO at Acme Ltd"/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Rating *</label>
+          <div class="star-picker" role="radiogroup" aria-label="Rating">
+            {% for i in range(1, 6) %}
+              <button type="button" class="star-pick" data-value="{{ i }}" aria-label="{{ i }} star">★</button>
+            {% endfor %}
+          </div>
+          <input type="hidden" id="revRating" name="rating" value="0"/>
+        </div>
+
+        <div class="form-group">
+          <label for="revMsg">Your Review *</label>
+          <textarea id="revMsg" name="message" rows="4" required placeholder="Tell potential clients what it's like to work with me…"></textarea>
+        </div>
+
+        <!-- Honeypot -->
+        <input type="text" name="website" style="display:none;" tabindex="-1" autocomplete="off"/>
+
+        <button type="submit" class="btn btn--primary wiggle-btn">Submit Review</button>
+        <p class="form-note mono">Reviews are approved before publishing.</p>
+        <div class="form-feedback" id="reviewFeedback" aria-live="polite"></div>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ CONTACT -->
+<section class="section contact" id="contact">
+  <div class="container contact__inner">
+
+    <div class="contact__text reveal">
+      <p class="section__label mono">// Get in touch</p>
+      <h2 class="section__title">Let's Build<br/><span class="red">Something</span> Together</h2>
+      <p class="contact__sub">Have a project in mind? Drop me a message and I'll get back to you within 24 hours.</p>
+
+      <!-- Quick links -->
+      <div class="contact__links">
+        <a href="https://wa.me/{{ settings.whatsapp_number | digits_only }}" target="_blank" rel="noopener" class="contact-link contact-link--wa">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp Chat
+        </a>
+        <a href="mailto:{{ settings.contact_email }}" class="contact-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          {{ settings.contact_email }}
+        </a>
+      </div>
+
+      <!-- Social links -->
+      <div class="social-links">
+        {% if settings.instagram_url and settings.instagram_url != '#' %}
+          <a href="{{ settings.instagram_url|safe_url }}" target="_blank" rel="noopener" aria-label="Instagram" class="social-link">IG</a>
+        {% endif %}
+        {% if settings.twitter_url and settings.twitter_url != '#' %}
+          <a href="{{ settings.twitter_url|safe_url }}" target="_blank" rel="noopener" aria-label="Twitter/X" class="social-link">X</a>
+        {% endif %}
+        {% if settings.linkedin_url and settings.linkedin_url != '#' %}
+          <a href="{{ settings.linkedin_url|safe_url }}" target="_blank" rel="noopener" aria-label="LinkedIn" class="social-link">in</a>
+        {% endif %}
+        {% if settings.behance_url and settings.behance_url != '#' %}
+          <a href="{{ settings.behance_url|safe_url }}" target="_blank" rel="noopener" aria-label="Behance" class="social-link">Bé</a>
+        {% endif %}
+        {% if settings.soundcloud_url and settings.soundcloud_url != '#' %}
+          <a href="{{ settings.soundcloud_url|safe_url }}" target="_blank" rel="noopener" aria-label="SoundCloud" class="social-link">SC</a>
+        {% endif %}
+        {% if settings.youtube_url and settings.youtube_url != '#' %}
+          <a href="{{ settings.youtube_url|safe_url }}" target="_blank" rel="noopener" aria-label="YouTube" class="social-link">YT</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Contact form -->
+    <form class="contact-form reveal" id="contactForm" novalidate data-delay="150">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="ctxName">Name *</label>
+          <input type="text" id="ctxName" name="name" required placeholder="Your full name" autocomplete="name"/>
+        </div>
+        <div class="form-group">
+          <label for="ctxEmail">Email *</label>
+          <input type="email" id="ctxEmail" name="email" required placeholder="you@example.com" autocomplete="email"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="ctxService">Service</label>
+        <select id="ctxService" name="service">
+          <option value="">— Select a service —</option>
+          <option value="IT & Web Development">IT &amp; Web Development</option>
+          <option value="Graphic Design">Graphic Design</option>
+          <option value="Video Editing">Video Editing</option>
+          <option value="Music Production">Music Production / Mixing</option>
+          <option value="Custom / Other">Custom / Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="ctxMessage">Message *</label>
+        <textarea id="ctxMessage" name="message" rows="5" required placeholder="Tell me about your project…"></textarea>
+      </div>
+
+      <!-- Honeypot -->
+      <input type="text" name="website" style="display:none;" tabindex="-1" autocomplete="off"/>
+
+      <button type="submit" class="btn btn--primary btn--lg wiggle-btn">Send Message</button>
+      <div class="form-feedback" id="contactFeedback" aria-live="polite"></div>
+    </form>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ FOOTER -->
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <a href="#hero" class="nav__brand smooth-scroll" style="text-decoration:none;">
+        {% if settings.logo_path %}
+          <img src="{{ media_url(settings.logo_path) }}" alt="logo" class="nav__logo-img"/>
+        {% else %}
+          <span class="nav__logo-placeholder" style="font-size:1.2rem;">H<span class="red">355</span></span>
+        {% endif %}
+        <span class="nav__brand-name">{{ settings.brand_name }}</span>
+      </a>
+      <p class="footer__tagline mono">{{ settings.hero_tagline }}</p>
+    </div>
+
+    <div class="footer__nav">
+      <a href="#services" class="smooth-scroll">Services</a>
+      <a href="#portfolio" class="smooth-scroll">Work</a>
+      <a href="#pricing" class="smooth-scroll">Pricing</a>
+      <a href="#about" class="smooth-scroll">About</a>
+      <a href="#contact" class="smooth-scroll">Contact</a>
+      <a href="/admin" class="footer__admin-link">Admin ↗</a>
+    </div>
+
+    <div class="footer__socials">
+      {% if settings.instagram_url and settings.instagram_url != '#' %}
+        <a href="{{ settings.instagram_url|safe_url }}" target="_blank" rel="noopener" class="social-link">IG</a>
+      {% endif %}
+      {% if settings.twitter_url and settings.twitter_url != '#' %}
+        <a href="{{ settings.twitter_url|safe_url }}" target="_blank" rel="noopener" class="social-link">X</a>
+      {% endif %}
+      {% if settings.youtube_url and settings.youtube_url != '#' %}
+        <a href="{{ settings.youtube_url|safe_url }}" target="_blank" rel="noopener" class="social-link">YT</a>
+      {% endif %}
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <p class="mono">© <span id="footerYear"></span> {{ settings.brand_name }}. All rights reserved.</p>
+    <button class="theme-toggle theme-toggle--sm" id="themeToggleFooter" aria-label="Toggle theme">
+      <span id="themeIconFooter">☀️</span>
+    </button>
+  </div>
+</footer>
+
+<!-- Main JS -->
+<script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</body>
+</html>

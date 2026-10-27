@@ -1,0 +1,66 @@
+{% extends "admin/base.html" %}
+{% block title %}Testimonials{% endblock %}
+{% block topbar_title %}Testimonials{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+  <div class="admin-page__header">
+    <h1>Testimonials</h1>
+  </div>
+
+  <!-- Status tabs -->
+  <div class="tab-bar">
+    {% for status, label in [('pending','Pending'),('approved','Approved'),('rejected','Rejected')] %}
+      <a href="{{ url_for('admin.testimonials_list', status=status) }}"
+         class="tab-bar__btn {% if current_status == status %}active{% endif %}">
+        {{ label }}
+        <span class="badge badge--gray mono">{{ counts[status] }}</span>
+      </a>
+    {% endfor %}
+  </div>
+
+  {% if items %}
+  <div class="testimonials-admin-grid">
+    {% for t in items %}
+    <div class="testimonial-admin-card">
+      <div class="testimonial-admin-card__header">
+        <div>
+          <strong>{{ t.name }}</strong>
+          {% if t.role %}<span class="mono">— {{ t.role }}</span>{% endif %}
+        </div>
+        <div class="stars-small">
+          {% for i in range(1,6) %}<span class="star {% if i <= t.rating %}star--on{% endif %}">★</span>{% endfor %}
+        </div>
+        <time class="mono">{{ t.created_at.strftime('%d %b %Y') }}</time>
+      </div>
+      <p>{{ t.message }}</p>
+      <div class="testimonial-admin-card__actions">
+        {% if t.status != 'approved' %}
+          <form method="POST" action="{{ url_for('admin.testimonial_approve', pk=t.id) }}" style="display:inline;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <button type="submit" class="btn btn--sm btn--primary">✓ Approve</button>
+          </form>
+        {% endif %}
+        {% if t.status != 'rejected' %}
+          <form method="POST" action="{{ url_for('admin.testimonial_reject', pk=t.id) }}" style="display:inline;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <button type="submit" class="btn btn--sm btn--outline">✗ Reject</button>
+          </form>
+        {% endif %}
+        <form method="POST" action="{{ url_for('admin.testimonial_delete', pk=t.id) }}"
+              style="display:inline;"
+              onsubmit="return confirm('Delete this review?')">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+          <button type="submit" class="btn btn--sm btn--danger">Delete</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+    <div class="empty-state-big">
+      <p>No {{ current_status }} testimonials.</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

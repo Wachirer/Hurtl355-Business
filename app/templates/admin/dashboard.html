@@ -1,0 +1,110 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block topbar_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+  <div class="admin-page__header">
+    <h1>Dashboard</h1>
+    <p class="mono">Welcome back, {{ current_user.username }}</p>
+  </div>
+
+  <!-- Stats cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-card__num">{{ stats.total_works }}</span>
+      <span class="stat-card__label">Total Works</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__num">{{ stats.published_works }}</span>
+      <span class="stat-card__label">Published</span>
+    </div>
+    <div class="stat-card stat-card--alert">
+      <span class="stat-card__num">{{ stats.pending_testimonials }}</span>
+      <span class="stat-card__label">Pending Reviews</span>
+    </div>
+    <div class="stat-card stat-card--alert">
+      <span class="stat-card__num">{{ stats.unread_messages }}</span>
+      <span class="stat-card__label">Unread Messages</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__num">{{ stats.approved_testimonials }}</span>
+      <span class="stat-card__label">Approved Reviews</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__num">{{ stats.total_messages }}</span>
+      <span class="stat-card__label">All Messages</span>
+    </div>
+  </div>
+
+  <!-- Quick actions -->
+  <div class="quick-actions">
+    <a href="{{ url_for('admin.works_new') }}" class="btn btn--primary">+ Add Work</a>
+    <a href="{{ url_for('admin.pricing_new') }}" class="btn btn--outline">+ Add Package</a>
+    <a href="{{ url_for('admin.testimonials_list', status='pending') }}" class="btn btn--outline">Review Testimonials</a>
+    <a href="{{ url_for('admin.messages_list') }}" class="btn btn--outline">View Messages</a>
+  </div>
+
+  <div class="dashboard__cols">
+    <!-- Recent messages -->
+    <div class="admin-card">
+      <div class="admin-card__header">
+        <h2>Recent Messages</h2>
+        <a href="{{ url_for('admin.messages_list') }}" class="mono">View all →</a>
+      </div>
+      {% if recent_messages %}
+      <table class="admin-table">
+        <thead><tr><th>From</th><th>Service</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody>
+          {% for msg in recent_messages %}
+          <tr class="{% if not msg.read %}row--unread{% endif %}">
+            <td><a href="{{ url_for('admin.message_view', pk=msg.id) }}">{{ msg.name }}</a><br/><small class="mono">{{ msg.email }}</small></td>
+            <td>{{ msg.service or '—' }}</td>
+            <td class="mono">{{ msg.created_at.strftime('%d %b %Y') }}</td>
+            <td>{% if msg.read %}<span class="badge badge--gray">Read</span>{% else %}<span class="badge badge--red">New</span>{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        <p class="empty-state">No messages yet.</p>
+      {% endif %}
+    </div>
+
+    <!-- Pending testimonials -->
+    <div class="admin-card">
+      <div class="admin-card__header">
+        <h2>Pending Reviews</h2>
+        <a href="{{ url_for('admin.testimonials_list', status='pending') }}" class="mono">View all →</a>
+      </div>
+      {% if recent_testimonials %}
+        {% for t in recent_testimonials %}
+        <div class="testimonial-row">
+          <div class="testimonial-row__info">
+            <strong>{{ t.name }}</strong>
+            {% if t.role %}<span class="mono">{{ t.role }}</span>{% endif %}
+            <div class="stars-small">
+              {% for i in range(1,6) %}<span class="star {% if i <= t.rating %}star--on{% endif %}">★</span>{% endfor %}
+            </div>
+            <p>{{ t.message[:100] }}{% if t.message|length > 100 %}…{% endif %}</p>
+          </div>
+          <div class="testimonial-row__actions">
+            <form method="POST" action="{{ url_for('admin.testimonial_approve', pk=t.id) }}" style="display:inline;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+              <button type="submit" class="btn btn--sm btn--primary">✓ Approve</button>
+            </form>
+            <form method="POST" action="{{ url_for('admin.testimonial_reject', pk=t.id) }}" style="display:inline;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+              <button type="submit" class="btn btn--sm btn--danger">✗ Reject</button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p class="empty-state">No pending reviews. 🎉</p>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

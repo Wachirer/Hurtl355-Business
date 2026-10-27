@@ -1,0 +1,29 @@
+# Render Blueprint — New > Blueprint > pick this repo.
+services:
+  - type: web
+    name: hurtl355
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    # ONE worker: the contact/login rate limiter lives in process memory.
+    startCommand: gunicorn wsgi:app --workers 1 --threads 4 --timeout 120 --bind 0.0.0.0:$PORT
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL        # Neon connection string
+        sync: false
+      - key: R2_ENDPOINT
+        sync: false
+      - key: R2_ACCESS_KEY_ID
+        sync: false
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false
+      - key: R2_BUCKET
+        sync: false
+      - key: R2_PUBLIC_URL
+        sync: false

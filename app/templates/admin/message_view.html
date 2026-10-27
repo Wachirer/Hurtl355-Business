@@ -1,0 +1,50 @@
+{% extends "admin/base.html" %}
+{% block title %}Message from {{ msg.name }}{% endblock %}
+{% block topbar_title %}View Message{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+  <div class="admin-page__header">
+    <h1>Message from {{ msg.name }}</h1>
+    <a href="{{ url_for('admin.messages_list') }}" class="btn btn--outline">← Back</a>
+  </div>
+
+  <div class="admin-card message-view">
+    <dl class="message-meta">
+      <dt>From</dt>
+      <dd><strong>{{ msg.name }}</strong></dd>
+      <dt>Email</dt>
+      <dd><a href="mailto:{{ msg.email }}">{{ msg.email }}</a></dd>
+      {% if msg.service %}
+        <dt>Service</dt>
+        <dd>{{ msg.service }}</dd>
+      {% endif %}
+      <dt>Received</dt>
+      <dd class="mono">{{ msg.created_at.strftime('%d %B %Y at %H:%M') }}</dd>
+      <dt>Status</dt>
+      <dd>{% if msg.read %}<span class="badge badge--gray">Read</span>{% else %}<span class="badge badge--red">New</span>{% endif %}</dd>
+    </dl>
+
+    <div class="message-body">
+      <h3>Message</h3>
+      <div class="message-body__text">{{ msg.body | nl2br }}</div>
+    </div>
+
+    <div class="message-view__actions">
+      <a href="mailto:{{ msg.email }}?subject=Re: {{ msg.service or 'Your enquiry' }}&body=Hi {{ msg.name }},"
+         class="btn btn--primary">Reply via Email</a>
+      {% if msg.read %}
+        <form method="POST" action="{{ url_for('admin.message_toggle_read', pk=msg.id) }}" style="display:inline;">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+          <button type="submit" class="btn btn--outline">Mark Unread</button>
+        </form>
+      {% endif %}
+      <form method="POST" action="{{ url_for('admin.message_delete', pk=msg.id) }}"
+            onsubmit="return confirm('Delete this message?')">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <button type="submit" class="btn btn--danger">Delete</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

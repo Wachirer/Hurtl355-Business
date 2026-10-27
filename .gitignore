@@ -1,0 +1,25 @@
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Secrets & local data — never commit these
+.env
+.env.*
+!.env.example
+instance/
+*.db
+
+# Node leftovers (the old Next.js starter)
+node_modules/
+.next/
+.open-next/
+.wrangler/
+.dev.vars
+
+# OS / editor / logs
+.DS_Store
+Thumbs.db
+.vscode/
+*.log

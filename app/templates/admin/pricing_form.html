@@ -1,0 +1,141 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ action }} Package{% endblock %}
+{% block topbar_title %}{{ action }} Package{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+  <div class="admin-page__header">
+    <h1>{{ action }} Pricing Package</h1>
+    <a href="{{ url_for('admin.pricing_list') }}" class="btn btn--outline">← Back</a>
+  </div>
+
+  <div class="admin-card form-card">
+    <form method="POST" class="admin-form" id="pricingForm">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="category">Service Category *</label>
+          <select id="category" name="category" required>
+            <option value="">— Choose —</option>
+            {% for cat, label in [('web','IT & Web Dev'),('graphic','Graphic Design'),('video','Video Editing'),('music','Music Production')] %}
+              <option value="{{ cat }}" {% if pkg and pkg.category == cat %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="tier_name">Tier Name *</label>
+          <input type="text" id="tier_name" name="tier_name" required
+                 value="{{ pkg.tier_name if pkg else '' }}"
+                 placeholder="Basic, Standard, Premium…"/>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="price_kes">Price (KES) *</label>
+          <input type="number" id="price_kes" name="price_kes" required min="0"
+                 value="{{ pkg.price_kes if pkg else 0 }}"/>
+        </div>
+        <div class="form-group">
+          <label for="price_label">Price Label <span class="mono">(e.g. / project)</span></label>
+          <input type="text" id="price_label" name="price_label"
+                 value="{{ pkg.price_label if pkg else '' }}"
+                 placeholder="/ project"/>
+        </div>
+        <div class="form-group">
+          <label for="display_order">Display Order</label>
+          <input type="number" id="display_order" name="display_order" min="0"
+                 value="{{ pkg.display_order if pkg else 0 }}"/>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group form-group--checks">
+          <label class="checkbox-label">
+            <input type="checkbox" name="is_popular" value="1"
+                   {% if pkg and pkg.is_popular %}checked{% endif %}/>
+            Most Popular
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" name="active" value="1"
+                   {% if not pkg or pkg.active %}checked{% endif %}/>
+            Active
+          </label>
+        </div>
+      </div>
+
+      <!-- Features builder -->
+      <div class="form-group">
+        <label>Features</label>
+        <div id="featuresWrap">
+          {% if pkg and pkg.features %}
+            {% for feat in pkg.features %}
+            <div class="feature-row">
+              <label class="checkbox-label feature-included-cb">
+                <input type="checkbox" name="feature_included" value="{{ loop.index0 }}"
+                       {% if feat.included %}checked{% endif %}/>
+                ✓
+              </label>
+              <input type="text" name="feature_text" class="feature-text-input"
+                     value="{{ feat.text }}" placeholder="Feature description"/>
+              <button type="button" class="btn btn--sm btn--danger feature-remove">✕</button>
+            </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+        <button type="button" class="btn btn--outline btn--sm" id="addFeature" style="margin-top:.5rem;">
+          + Add Feature
+        </button>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn--primary">{{ action }}</button>
+        <a href="{{ url_for('admin.pricing_list') }}" class="btn btn--outline">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// Dynamic feature rows — vanilla JS
+(function(){
+  var wrap = document.getElementById('featuresWrap');
+  var addBtn = document.getElementById('addFeature');
+  var rowCount = wrap ? wrap.querySelectorAll('.feature-row').length : 0;
+
+  function makeRow(idx) {
+    var div = document.createElement('div');
+    div.className = 'feature-row';
+    div.innerHTML = `
+      <label class="checkbox-label feature-included-cb">
+        <input type="checkbox" name="feature_included" value="${idx}" checked/> ✓
+      </label>
+      <input type="text" name="feature_text" class="feature-text-input" placeholder="Feature description"/>
+      <button type="button" class="btn btn--sm btn--danger feature-remove">✕</button>
+    `;
+    return div;
+  }
+
+  function reindex() {
+    wrap.querySelectorAll('.feature-row').forEach(function(row, i){
+      var cb = row.querySelector('input[type=checkbox]');
+      if(cb) cb.value = i;
+    });
+  }
+
+  addBtn && addBtn.addEventListener('click', function(){
+    var row = makeRow(rowCount++);
+    wrap.appendChild(row);
+    reindex();
+  });
+
+  wrap && wrap.addEventListener('click', function(e){
+    if(e.target.classList.contains('feature-remove')){
+      e.target.closest('.feature-row').remove();
+      reindex();
+    }
+  });
+})();
+</script>
+{% endblock %}

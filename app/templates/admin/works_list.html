@@ -1,0 +1,80 @@
+{% extends "admin/base.html" %}
+{% block title %}Portfolio{% endblock %}
+{% block topbar_title %}Portfolio{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+  <div class="admin-page__header">
+    <h1>Portfolio</h1>
+    <a href="{{ url_for('admin.works_new') }}" class="btn btn--primary">+ Add Work</a>
+  </div>
+
+  {% if works %}
+  <div class="admin-card">
+    <table class="admin-table admin-table--works">
+      <thead>
+        <tr>
+          <th>Thumbnail</th>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Order</th>
+          <th>Featured</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for work in works %}
+        <tr>
+          <td>
+            {% if work.thumbnail_path %}
+              <img src="{{ media_url(work.thumbnail_path) }}"
+                   alt="{{ work.title }}" class="table-thumb" loading="lazy"/>
+            {% else %}
+              <div class="table-thumb-placeholder">{{ work.category[0].upper() }}</div>
+            {% endif %}
+          </td>
+          <td>
+            <strong>{{ work.title }}</strong>
+            {% if work.description %}
+              <br/><small class="mono">{{ work.description[:60] }}{% if work.description|length > 60 %}…{% endif %}</small>
+            {% endif %}
+          </td>
+          <td><span class="badge badge--cat badge--{{ work.category }} mono">{{ work.category }}</span></td>
+          <td class="mono">{{ work.display_order }}</td>
+          <td>{% if work.featured %}<span class="badge badge--red">★</span>{% else %}&mdash;{% endif %}</td>
+          <td>
+            {% if work.published %}
+              <span class="badge badge--green">Published</span>
+            {% else %}
+              <span class="badge badge--gray">Draft</span>
+            {% endif %}
+          </td>
+          <td class="actions-cell">
+            <a href="{{ url_for('admin.works_edit', pk=work.id) }}" class="btn btn--sm btn--outline">Edit</a>
+            <form method="POST" action="{{ url_for('admin.works_toggle_publish', pk=work.id) }}" style="display:inline;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+              <button type="submit" class="btn btn--sm btn--outline">
+                {% if work.published %}Unpublish{% else %}Publish{% endif %}
+              </button>
+            </form>
+            <form method="POST" action="{{ url_for('admin.works_delete', pk=work.id) }}"
+                  style="display:inline;"
+                  onsubmit="return confirm('Delete {{ work.title | e }}?')">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+              <button type="submit" class="btn btn--sm btn--danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <div class="empty-state-big">
+      <p>No portfolio items yet.</p>
+      <a href="{{ url_for('admin.works_new') }}" class="btn btn--primary">Add your first work</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

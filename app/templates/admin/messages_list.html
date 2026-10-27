@@ -1,0 +1,67 @@
+{% extends "admin/base.html" %}
+{% block title %}Messages{% endblock %}
+{% block topbar_title %}Messages{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+  <div class="admin-page__header">
+    <h1>Messages</h1>
+    <span class="mono">{{ messages | selectattr('read', 'equalto', False) | list | length }} unread</span>
+  </div>
+
+  {% if messages %}
+  <div class="admin-card">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>From</th>
+          <th>Email</th>
+          <th>Service</th>
+          <th>Preview</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for msg in messages %}
+        <tr class="{% if not msg.read %}row--unread{% endif %}">
+          <td><strong>{{ msg.name }}</strong></td>
+          <td class="mono"><a href="mailto:{{ msg.email }}">{{ msg.email }}</a></td>
+          <td>{{ msg.service or '—' }}</td>
+          <td>{{ msg.body[:60] }}{% if msg.body|length > 60 %}…{% endif %}</td>
+          <td class="mono">{{ msg.created_at.strftime('%d %b %Y') }}</td>
+          <td>
+            {% if msg.read %}
+              <span class="badge badge--gray">Read</span>
+            {% else %}
+              <span class="badge badge--red">New</span>
+            {% endif %}
+          </td>
+          <td class="actions-cell">
+            <a href="{{ url_for('admin.message_view', pk=msg.id) }}" class="btn btn--sm btn--outline">View</a>
+            <form method="POST" action="{{ url_for('admin.message_toggle_read', pk=msg.id) }}" style="display:inline;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+              <button type="submit" class="btn btn--sm btn--outline">
+                {% if msg.read %}Unread{% else %}Read{% endif %}
+              </button>
+            </form>
+            <form method="POST" action="{{ url_for('admin.message_delete', pk=msg.id) }}"
+                  style="display:inline;"
+                  onsubmit="return confirm('Delete this message?')">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+              <button type="submit" class="btn btn--sm btn--danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <div class="empty-state-big">
+      <p>No messages yet.</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

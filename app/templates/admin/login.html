@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login — Hurtl355</title>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=DM+Sans:opsz,wght@9..40,400&family=Space+Mono:wght@400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}"/>
+  <script>(function(){document.documentElement.setAttribute('data-theme',localStorage.getItem('adminTheme')||'light')})();</script>
+</head>
+<body class="login-page">
+
+<div class="login-wrap">
+  <div class="login-card">
+    <div class="login-card__header">
+      <h1 class="login-brand">H<span class="red">355</span></h1>
+      <p class="mono">Admin Panel</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash flash--{{ category }}" role="alert">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('admin.login') }}" class="login-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required autofocus autocomplete="username" placeholder="admin"/>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="••••••••"/>
+      </div>
+      <button type="submit" class="btn btn--primary btn--block">Login →</button>
+    </form>
+
+    <a href="{{ url_for('public.index') }}" class="login-card__back mono">← Back to site</a>
+  </div>
+</div>
+
+</body>
+</html>

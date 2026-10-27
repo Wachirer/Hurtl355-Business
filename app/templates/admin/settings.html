@@ -1,0 +1,142 @@
+{% extends "admin/base.html" %}
+{% block title %}Settings{% endblock %}
+{% block topbar_title %}Settings{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+  <div class="admin-page__header">
+    <h1>Site Settings</h1>
+  </div>
+
+  <div class="admin-card form-card">
+    <form method="POST" enctype="multipart/form-data" class="admin-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+      <!-- Logo -->
+      <fieldset class="settings-section">
+        <legend>Branding</legend>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="brand_name">Brand Name</label>
+            <input type="text" id="brand_name" name="brand_name"
+                   value="{{ settings.get('brand_name','Hurtl355') }}" placeholder="Hurtl355"/>
+          </div>
+          <div class="form-group">
+            <label for="logo">Logo Image <span class="mono">(jpg/png/webp)</span></label>
+            <input type="file" id="logo" name="logo" accept="image/*"/>
+            {% if settings.get('logo_path') %}
+              <p class="form-note">Current logo:</p>
+              <img src="{{ media_url(settings.get('logo_path')) }}"
+                   alt="Current logo" style="max-height:60px;margin-top:.5rem;"/>
+            {% else %}
+              <p class="form-note mono">No logo uploaded — using text placeholder.</p>
+            {% endif %}
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Hero -->
+      <fieldset class="settings-section">
+        <legend>Hero Section</legend>
+        <div class="form-group">
+          <label for="hero_tagline">Tagline</label>
+          <input type="text" id="hero_tagline" name="hero_tagline"
+                 value="{{ settings.get('hero_tagline','') }}"
+                 placeholder="Code. Design. Sound. Vision."/>
+        </div>
+        <div class="form-group">
+          <label for="hero_subtext">Services Summary Line</label>
+          <input type="text" id="hero_subtext" name="hero_subtext"
+                 value="{{ settings.get('hero_subtext','') }}"/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="hero_cta_primary">Primary CTA Button</label>
+            <input type="text" id="hero_cta_primary" name="hero_cta_primary"
+                   value="{{ settings.get('hero_cta_primary','View Work') }}"/>
+          </div>
+          <div class="form-group">
+            <label for="hero_cta_secondary">Secondary CTA Button</label>
+            <input type="text" id="hero_cta_secondary" name="hero_cta_secondary"
+                   value="{{ settings.get('hero_cta_secondary','Hire Us') }}"/>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- About -->
+      <fieldset class="settings-section">
+        <legend>About Section</legend>
+        <div class="form-group">
+          <label for="about_bio">Bio</label>
+          <textarea id="about_bio" name="about_bio" rows="6"
+                    placeholder="Tell visitors who you are…">{{ settings.get('about_bio','') }}</textarea>
+        </div>
+        <div class="form-group">
+          <label for="about_skills">Skills <span class="mono">(comma-separated)</span></label>
+          <input type="text" id="about_skills" name="about_skills"
+                 value="{{ settings.get('about_skills','') }}"
+                 placeholder="Python, Flask, Figma, FL Studio…"/>
+        </div>
+      </fieldset>
+
+      <!-- Contact & Social -->
+      <fieldset class="settings-section">
+        <legend>Contact &amp; Social</legend>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="whatsapp_number">WhatsApp Number</label>
+            <input type="text" id="whatsapp_number" name="whatsapp_number"
+                   value="{{ settings.get('whatsapp_number','+254700000000') }}"
+                   placeholder="+254700000000"/>
+          </div>
+          <div class="form-group">
+            <label for="contact_email">Contact Email</label>
+            <input type="email" id="contact_email" name="contact_email"
+                   value="{{ settings.get('contact_email','hello@hurtl355.com') }}"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="instagram_url">Instagram URL</label>
+            <input type="url" id="instagram_url" name="instagram_url"
+                   value="{{ settings.get('instagram_url','#') }}"/>
+          </div>
+          <div class="form-group">
+            <label for="twitter_url">Twitter / X URL</label>
+            <input type="url" id="twitter_url" name="twitter_url"
+                   value="{{ settings.get('twitter_url','#') }}"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="linkedin_url">LinkedIn URL</label>
+            <input type="url" id="linkedin_url" name="linkedin_url"
+                   value="{{ settings.get('linkedin_url','#') }}"/>
+          </div>
+          <div class="form-group">
+            <label for="behance_url">Behance URL</label>
+            <input type="url" id="behance_url" name="behance_url"
+                   value="{{ settings.get('behance_url','#') }}"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="soundcloud_url">SoundCloud URL</label>
+            <input type="url" id="soundcloud_url" name="soundcloud_url"
+                   value="{{ settings.get('soundcloud_url','#') }}"/>
+          </div>
+          <div class="form-group">
+            <label for="youtube_url">YouTube URL</label>
+            <input type="url" id="youtube_url" name="youtube_url"
+                   value="{{ settings.get('youtube_url','#') }}"/>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn--primary">Save Settings</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "admin/base.html" %}
+{% block title %}Pricing{% endblock %}
+{% block topbar_title %}Pricing{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+  <div class="admin-page__header">
+    <h1>Pricing Packages</h1>
+    <a href="{{ url_for('admin.pricing_new') }}" class="btn btn--primary">+ Add Package</a>
+  </div>
+
+  {% if packages %}
+  <div class="admin-card">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Tier</th>
+          <th>Price (KES)</th>
+          <th>Features</th>
+          <th>Popular</th>
+          <th>Order</th>
+          <th>Active</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for pkg in packages %}
+        <tr>
+          <td><span class="badge badge--cat mono">{{ pkg.category }}</span></td>
+          <td><strong>{{ pkg.tier_name }}</strong></td>
+          <td class="mono">KES {{ "{:,}".format(pkg.price_kes) }} {{ pkg.price_label }}</td>
+          <td class="mono">{{ pkg.features | length }} items</td>
+          <td>{% if pkg.is_popular %}<span class="badge badge--red">★ Popular</span>{% else %}&mdash;{% endif %}</td>
+          <td class="mono">{{ pkg.display_order }}</td>
+          <td>{% if pkg.active %}<span class="badge badge--green">Active</span>{% else %}<span class="badge badge--gray">Off</span>{% endif %}</td>
+          <td class="actions-cell">
+            <a href="{{ url_for('admin.pricing_edit', pk=pkg.id) }}" class="btn btn--sm btn--outline">Edit</a>
+            <form method="POST" action="{{ url_for('admin.pricing_delete', pk=pkg.id) }}"
+                  style="display:inline;"
+                  onsubmit="return confirm('Delete {{ pkg.tier_name | e }}?')">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+              <button type="submit" class="btn btn--sm btn--danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <div class="empty-state-big">
+      <p>No pricing packages yet.</p>
+      <a href="{{ url_for('admin.pricing_new') }}" class="btn btn--primary">Add your first package</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

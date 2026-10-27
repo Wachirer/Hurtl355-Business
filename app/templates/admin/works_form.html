@@ -1,0 +1,110 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ action }} Work{% endblock %}
+{% block topbar_title %}{{ action }} Work{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+  <div class="admin-page__header">
+    <h1>{{ action }} Portfolio Item</h1>
+    <a href="{{ url_for('admin.works_list') }}" class="btn btn--outline">← Back</a>
+  </div>
+
+  <div class="admin-card form-card">
+    <form method="POST" enctype="multipart/form-data" class="admin-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="title">Title *</label>
+          <input type="text" id="title" name="title" required
+                 value="{{ work.title if work else '' }}" placeholder="Project title"/>
+        </div>
+        <div class="form-group">
+          <label for="category">Category *</label>
+          <select id="category" name="category" required>
+            <option value="">— Choose —</option>
+            {% for cat, label in [('graphic','Graphic Design'),('video','Video Editing'),('music','Music'),('web','Web / IT')] %}
+              <option value="{{ cat }}" {% if work and work.category == cat %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="4"
+                  placeholder="Short description of the project…">{{ work.description if work else '' }}</textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="file">Upload File
+            <span class="mono">(image / mp3 / mp4 depending on category)</span>
+          </label>
+          <input type="file" id="file" name="file" accept="image/*,audio/mp3,audio/mpeg,video/mp4"/>
+          {% if work and work.file_path %}
+            <p class="form-note mono">Current: {{ work.file_path }}</p>
+          {% endif %}
+        </div>
+        <div class="form-group">
+          <label for="thumbnail">Thumbnail Image <span class="mono">(jpg/png/webp)</span></label>
+          <input type="file" id="thumbnail" name="thumbnail" accept="image/*"/>
+          {% if work and work.thumbnail_path %}
+            <img src="{{ media_url(work.thumbnail_path) }}"
+                 alt="Current thumbnail" class="form-preview-img"/>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="external_url">External URL
+            <span class="mono">(YouTube, Vimeo, Spotify, SoundCloud link)</span>
+          </label>
+          <input type="url" id="external_url" name="external_url"
+                 value="{{ work.external_url if work else '' }}"
+                 placeholder="https://…"/>
+        </div>
+        <div class="form-group">
+          <label for="project_url">Live Project URL <span class="mono">(web projects)</span></label>
+          <input type="url" id="project_url" name="project_url"
+                 value="{{ work.project_url if work else '' }}"
+                 placeholder="https://…"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="tech_tags">Tech Tags <span class="mono">(comma-separated)</span></label>
+        <input type="text" id="tech_tags" name="tech_tags"
+               value="{{ work.tech_tags if work else '' }}"
+               placeholder="Python, Flask, React, …"/>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="display_order">Display Order</label>
+          <input type="number" id="display_order" name="display_order"
+                 value="{{ work.display_order if work else 0 }}" min="0"/>
+        </div>
+        <div class="form-group form-group--checks">
+          <label class="checkbox-label">
+            <input type="checkbox" name="featured" value="1"
+                   {% if work and work.featured %}checked{% endif %}/>
+            Featured
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" name="published" value="1"
+                   {% if not work or work.published %}checked{% endif %}/>
+            Published
+          </label>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn--primary">{{ action }}</button>
+        <a href="{{ url_for('admin.works_list') }}" class="btn btn--outline">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
